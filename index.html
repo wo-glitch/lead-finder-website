@@ -3,21 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lead Finder</title>
+    <title>Restaurants With No Website</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="page">
       <section class="card">
-        <h1>Find restaurants that need a website</h1>
+        <h1>Restaurants with no website</h1>
         <p class="subtitle">
-          Enter a city or neighborhood to open Apple Maps and Google Maps searches for restaurants you can contact.
+          Enter a city or neighborhood to open map searches for restaurants you can contact.
         </p>
 
         <form id="lead-form">
-          <input id="industry" type="text" value="restaurants" readonly />
+          <input id="industry" type="hidden" value="restaurants" />
           <input id="location" type="text" placeholder="e.g. Miami" required />
-          <button type="submit">Search leads</button>
+          <button type="submit">Find restaurants</button>
         </form>
 
         <div id="summary" class="summary"></div>
