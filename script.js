@@ -33,6 +33,13 @@ function buildSearchLinks(industry, location) {
   ];
 }
 
+function showExampleHint() {
+  summary.textContent = 'Enter a place and the search pack will appear here.';
+  results.innerHTML = '';
+}
+
+showExampleHint();
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   const industry = industryInput.value.trim();
