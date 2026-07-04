@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lead Finder</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1>Find businesses that need a website</h1>
+        <p class="subtitle">
+          Enter a business type and location to open public search pages for likely leads.
+        </p>
+
+        <form id="lead-form">
+          <input id="industry" type="text" placeholder="e.g. dentists" required />
+          <input id="location" type="text" placeholder="e.g. Miami" required />
+          <button type="submit">Search leads</button>
+        </form>
+
+        <div id="summary" class="summary"></div>
+
+        <div id="results" class="results"></div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
