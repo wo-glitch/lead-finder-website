@@ -7,24 +7,27 @@ const results = document.getElementById('results');
 function buildSearchLinks(industry, location) {
   const place = location.trim();
   const searchQuery = `${industry} in ${place}`.trim();
-  const webQuery = `${industry} in ${place} no website`.trim();
   const mapsQuery = encodeURIComponent(searchQuery);
-  const webQueryEncoded = encodeURIComponent(webQuery);
+  const webQueries = [
+    `${searchQuery} no website`,
+    `${searchQuery} without website`,
+    `${searchQuery} website missing`
+  ];
 
   return [
-    {
-      name: 'Google Search',
-      description: 'Search the web for restaurants in this location that may not have a website.',
-      url: `https://www.google.com/search?q=${webQueryEncoded}`
-    },
+    ...webQueries.map((query, index) => ({
+      name: `Google Search ${index + 1}`,
+      description: `Try a targeted web search for ${searchQuery} using wording that hints at missing websites.`,
+      url: `https://www.google.com/search?q=${encodeURIComponent(query)}`
+    })),
     {
       name: 'Google Maps',
-      description: 'Open map listings for restaurants in this location.',
+      description: `Open map listings for ${searchQuery} so you can inspect local restaurants visually.`,
       url: `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`
     },
     {
       name: 'Apple Maps',
-      description: 'Open Apple Maps listings for restaurants in this location.',
+      description: `Open Apple Maps listings for ${searchQuery} so you can inspect local restaurants visually.`,
       url: `https://maps.apple.com/?q=${encodeURIComponent(searchQuery)}`
     }
   ];
@@ -43,7 +46,7 @@ form.addEventListener('submit', (event) => {
 
   const links = buildSearchLinks(industry, location);
   const searchQuery = `${industry} in ${location}`.trim();
-  summary.textContent = `Opening web and map searches for ${searchQuery} anywhere in the world to help you find restaurants that may not have a website.`;
+  summary.textContent = `Opening a lead-search pack for ${searchQuery} across the web and maps to help you find restaurants that may not have a website.`;
 
   results.innerHTML = links.map((item) => `
     <div class="result">
