@@ -30,13 +30,14 @@ body {
 }
 h1 { margin: 0 0 8px; font-size: 2rem; }
 .subtitle { margin-top: 0; color: var(--muted); }
-.hint {
-  margin: 0 0 16px;
-  padding: 10px 12px;
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
   border-radius: 10px;
   background: #f8fafc;
-  border: 1px dashed var(--border);
-  color: var(--muted);
 }
 form {
   display: flex;
@@ -51,6 +52,8 @@ input, button {
   font-size: 1rem;
 }
 input { flex: 1; min-width: 220px; }
+#radius { max-width: 180px; }
+#api-key { min-width: 280px; }
 button {
   background: var(--accent);
   color: white;

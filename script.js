@@ -1,65 +1,67 @@
 const form = document.getElementById('lead-form');
-const industryInput = document.getElementById('industry');
+const queryInput = document.getElementById('query');
 const locationInput = document.getElementById('location');
+const radiusInput = document.getElementById('radius');
+const apiKeyInput = document.getElementById('api-key');
+const noWebsiteOnlyInput = document.getElementById('no-website-only');
 const summary = document.getElementById('summary');
 const results = document.getElementById('results');
 
-function buildSearchLinks(industry, location) {
-  const place = location.trim();
-  const searchQuery = `${industry} in ${place}`.trim();
-  const mapsQuery = encodeURIComponent(searchQuery);
-  const webQueries = [
-    `${searchQuery} no website`,
-    `${searchQuery} without website`,
-    `${searchQuery} website missing`
-  ];
+function renderResults(leads) {
+  if (!leads.length) {
+    results.innerHTML = '<div class="result">No matching businesses found.</div>';
+    return;
+  }
 
-  return [
-    ...webQueries.map((query, index) => ({
-      name: `Google Search ${index + 1}`,
-      description: `Try a targeted web search for ${searchQuery} using wording that hints at missing websites.`,
-      url: `https://www.google.com/search?q=${encodeURIComponent(query)}`
-    })),
-    {
-      name: 'Google Maps',
-      description: `Open map listings for ${searchQuery} so you can inspect local restaurants visually.`,
-      url: `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`
-    },
-    {
-      name: 'Apple Maps',
-      description: `Open Apple Maps listings for ${searchQuery} so you can inspect local restaurants visually.`,
-      url: `https://maps.apple.com/?q=${encodeURIComponent(searchQuery)}`
-    }
-  ];
+  results.innerHTML = leads.map((lead) => `
+    <div class="result">
+      <strong>${lead.name}</strong>
+      <div>Phone: ${lead.phone}</div>
+      <div>Address: ${lead.address}</div>
+      <div>Website: ${lead.website ? lead.website : '<span class="missing">❌ missing</span>'}</div>
+    </div>
+  `).join('');
 }
 
-function showExampleHint() {
-  summary.textContent = 'Enter a place and the search pack will appear here.';
-  results.innerHTML = '';
+async function searchBusinesses(query, location, radius, noWebsiteOnly, apiKey) {
+  if (!apiKey) {
+    return [
+      {
+        name: 'Example lead',
+        phone: '—',
+        address: 'Example address',
+        website: ''
+      }
+    ];
+  }
+
+  const url = SearchUtils.buildPlacesUrl({ query, apiKey, location, radius });
+  const response = await fetch(url);
+  const data = await response.json();
+  const enriched = await SearchUtils.enrichBusinesses(data.results || [], apiKey);
+  return SearchUtils.filterBusinesses(enriched, noWebsiteOnly);
 }
 
-showExampleHint();
-
-form.addEventListener('submit', (event) => {
+form.addEventListener('submit', async (event) => {
   event.preventDefault();
-  const industry = industryInput.value.trim();
+  const query = queryInput.value.trim();
   const location = locationInput.value.trim();
+  const radius = radiusInput.value.trim();
+  const apiKey = apiKeyInput.value.trim();
+  const noWebsiteOnly = noWebsiteOnlyInput.checked;
 
-  if (!location) {
-    summary.textContent = 'Please enter a location.';
+  if (!query) {
+    summary.textContent = 'Please enter a search query.';
     results.innerHTML = '';
     return;
   }
 
-  const links = buildSearchLinks(industry, location);
-  const searchQuery = `${industry} in ${location}`.trim();
-  summary.textContent = `Opening a lead-search pack for ${searchQuery} across the web and maps to help you find restaurants that may not have a website.`;
+  summary.textContent = 'Searching businesses...';
+  results.innerHTML = '';
 
-  results.innerHTML = links.map((item) => `
-    <div class="result">
-      <strong>${item.name}</strong>
-      <div>${item.description}</div>
-      <a href="${item.url}" target="_blank" rel="noopener noreferrer">Open ${item.name}</a>
-    </div>
-  `).join('');
+  const leads = await searchBusinesses(query, location, radius, noWebsiteOnly, apiKey);
+  renderResults(leads);
+  summary.textContent = noWebsiteOnly
+    ? `Showing ${leads.length} business lead${leads.length === 1 ? '' : 's'} with no website.`
+    : `Showing ${leads.length} business lead${leads.length === 1 ? '' : 's'}.`;
 });

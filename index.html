@@ -11,25 +11,27 @@
       <section class="card">
         <h1>Restaurants with no website</h1>
         <p class="subtitle">
-          Enter any city, neighborhood, or country in the world to open a lead-search pack across Google, Google Maps, and Apple Maps for restaurants that may not have a website. This is a starting point, not a perfect filter.
+          Search for businesses, filter to those with no website, and review the leads in a list. This uses live business data when a Google Places API key is provided.
         </p>
 
-        <div class="hint">
-          Try a place like Paris, Dubai, or Mexico City to see the search pack appear below.
-        </div>
-
         <form id="lead-form">
-          <input id="industry" type="hidden" value="restaurants" />
-          <input id="location" type="text" placeholder="e.g. Paris, London, Dubai" required />
-          <button type="submit">Find restaurants</button>
+          <input id="query" type="text" placeholder="e.g. Restaurants in Kuwait or Gyms near me" required />
+          <input id="location" type="text" placeholder="e.g. Kuwait City" />
+          <input id="radius" type="number" min="1" value="10000" placeholder="radius in meters" />
+          <input id="api-key" type="text" placeholder="Google Places API key" />
+          <label class="checkbox-row">
+            <input id="no-website-only" type="checkbox" checked />
+            <span>No website only</span>
+          </label>
+          <button type="submit">Find leads</button>
         </form>
 
         <div id="summary" class="summary"></div>
-
         <div id="results" class="results"></div>
       </section>
     </main>
 
-    <script src="script.js?v=20260704-2"></script>
+    <script src="search-utils.js?v=20260704-3"></script>
+    <script src="script.js?v=20260704-3"></script>
   </body>
 </html>
